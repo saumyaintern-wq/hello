@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { PLATFORM_QUESTIONS } from "@/lib/constants";
+import { staggerContainer, staggerItem } from "@/components/animations/stagger";
+import { fadeUp } from "@/components/animations/fade";
 
-const questions = [
-  "What narratives are forming?",
-  "Is something going viral?",
-  "Is this a reputational risk?",
-  "Who is driving the conversation?",
-  "Can it escalate into a national issue?",
+const floatingCards = [
+  { tag: "NARRATIVES", title: "Real clusters", cls: "card-1", delay: "0s" },
+  { tag: "SIGNALS", title: "Live feed", cls: "card-2", delay: "1s" },
+  { tag: "RISK", title: "Crisis watch", cls: "card-3", delay: "2s" },
+  { tag: "SIMULATION", title: "KedarSetu", cls: "card-4", delay: "3s" },
 ];
 
 export default function PlatformAnswers() {
@@ -15,8 +18,8 @@ export default function PlatformAnswers() {
 
   useEffect(() => {
     const i = setInterval(() => {
-      setActive((prev) => (prev + 1) % questions.length);
-    }, 3000);
+      setActive((prev) => (prev + 1) % PLATFORM_QUESTIONS.length);
+    }, 2800);
     return () => clearInterval(i);
   }, []);
 
@@ -25,45 +28,52 @@ export default function PlatformAnswers() {
       <div className="container platform-inner">
 
         {/* LEFT SIDE */}
-        <div className="platform-left">
-          <p className="platform-tag">WHAT THE PLATFORM ANSWERS</p>
+        <motion.div
+          className="platform-left"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+        >
+          <motion.p variants={staggerItem} className="platform-tag">
+            WHAT THE PLATFORM ANSWERS
+          </motion.p>
 
           <div className="questions">
-            {questions.map((q, i) => (
-              <div
+            {PLATFORM_QUESTIONS.map((q, i) => (
+              <motion.div
                 key={i}
                 className={`question ${active === i ? "active" : ""}`}
+                animate={{
+                  opacity: active === i ? 1 : 0.35,
+                  x: active === i ? 0 : -10,
+                }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
               >
                 <span className="highlight" />
                 <p>{q}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* RIGHT SIDE */}
         <div className="platform-right">
-
-          <div className="floating-card card-1">
-            <span>NARRATIVES</span>
-            <h3>Real clusters</h3>
-          </div>
-
-          <div className="floating-card card-2">
-            <span>SIGNALS</span>
-            <h3>Live feed</h3>
-          </div>
-
-          <div className="floating-card card-3">
-            <span>RISK</span>
-            <h3>Crisis watch</h3>
-          </div>
-
-          <div className="floating-card card-4">
-            <span>SIMULATION</span>
-            <h3>KedarSetu</h3>
-          </div>
-
+          {floatingCards.map((card) => (
+            <motion.div
+              key={card.cls}
+              className={`floating-card ${card.cls}`}
+              style={{ animationDelay: card.delay }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: parseFloat(card.delay) * 0.25 }}
+              whileHover={{ scale: 1.08, y: -8 }}
+            >
+              <span>{card.tag}</span>
+              <h3>{card.title}</h3>
+            </motion.div>
+          ))}
         </div>
 
       </div>

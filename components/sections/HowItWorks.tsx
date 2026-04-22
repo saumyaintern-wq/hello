@@ -1,61 +1,54 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { HOW_IT_WORKS } from "@/lib/constants";
+import { staggerContainer, staggerItem } from "@/components/animations/stagger";
+import { fadeUp } from "@/components/animations/fade";
+
 export default function HowItWorks() {
   return (
     <section className="how">
-
       <div className="container">
-
         <div className="how-wrapper">
 
-          {/* LABEL */}
-          <p className="how-label">HOW IT WORKS</p>
+          {/* Section header */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+          >
+            <motion.p variants={staggerItem} className="how-label">HOW IT WORKS</motion.p>
+            <motion.h2 variants={fadeUp} className="section-title" style={{ marginBottom: "40px" }}>
+              From raw signal to actionable intelligence
+            </motion.h2>
+          </motion.div>
 
-          {/* GRID */}
-          <div className="how-grid">
-
-            {/* CARD 1 */}
-            <div className="how-card">
-              <h3>Data</h3>
-              <p>
-                Tweets, news, replies, and narrative-relevant coverage are
-                ingested into a unified pipeline.
-              </p>
-            </div>
-
-            {/* CARD 2 */}
-            <div className="how-card">
-              <h3>AI</h3>
-              <p>
-                Narratives are clustered, scored, and linked to risk,
-                sentiment, and likely actors.
-              </p>
-            </div>
-
-            {/* CARD 3 */}
-            <div className="how-card">
-              <h3>Insights</h3>
-              <p>
-                Operators get entity-level dashboards, trending narratives,
-                and influence signals.
-              </p>
-            </div>
-
-            {/* CARD 4 */}
-            <div className="how-card">
-              <h3>Prediction</h3>
-              <p>
-                High-risk narratives can be escalated into scenario simulations
-                for response planning.
-              </p>
-            </div>
-
-          </div>
+          {/* Steps grid */}
+          <motion.div
+            className="how-grid"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+          >
+            {HOW_IT_WORKS.map((step) => (
+              <motion.div
+                key={step.step}
+                className="how-card"
+                variants={staggerItem}
+                whileHover={{ y: -4, backgroundColor: "rgba(255,255,255,0.6)" }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <span className="how-step-num">{step.step}</span>
+                <h3>{step.title}</h3>
+                <p>{step.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
 
         </div>
-
       </div>
-
     </section>
   );
 }
